@@ -1,14 +1,10 @@
 object Form1: TForm1
   Left = 192
   Top = 129
-  HorzScrollBar.Color = clBlack
-  HorzScrollBar.ParentColor = False
-  VertScrollBar.Color = clHighlight
-  VertScrollBar.ParentColor = False
   Caption = #1056#1072#1089#1095#1077#1090' '#1074#1077#1088#1086#1103#1090#1085#1086#1089#1090#1077#1081' '#1089#1086#1089#1090#1086#1103#1085#1080#1103' '#1057#1052#1054
   ClientHeight = 474
   ClientWidth = 642
-  Color = clMenuBar
+  Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
@@ -46,22 +42,22 @@ object Form1: TForm1
     Caption = #1050#1086#1083'-'#1074#1086' '#1082#1072#1085#1072#1083#1086#1074
   end
   object Label4: TLabel
-    Left = 111
-    Top = 443
+    Left = 112
+    Top = 408
     Width = 102
     Height = 13
     Caption = #1050#1086#1085#1090#1088#1086#1083#1100#1085#1072#1103' '#1089#1091#1084#1084#1072
   end
   object Label5: TLabel
-    Left = 175
-    Top = 61
+    Left = 168
+    Top = 56
     Width = 83
     Height = 13
     Caption = #1044#1083#1080#1085#1085#1072' '#1086#1095#1077#1088#1077#1076#1080
   end
   object Label6: TLabel
-    Left = 34
-    Top = 311
+    Left = 32
+    Top = 312
     Width = 179
     Height = 13
     Caption = #1042#1077#1088#1086#1103#1090#1085#1086#1089#1090#1100' '#1086#1090#1082#1072#1079#1072' '#1086#1073#1089#1083#1091#1078#1080#1074#1072#1085#1080#1103
@@ -74,11 +70,11 @@ object Form1: TForm1
     Caption = #1057#1088'. '#1095'. '#1079#1072#1085#1103#1090#1099#1093' '#1082#1072#1085#1072#1083#1086#1074
   end
   object Label8: TLabel
-    Left = 41
-    Top = 379
-    Width = 172
+    Left = 40
+    Top = 376
+    Width = 173
     Height = 13
-    Caption = #1057#1088'. '#1095'. '#1079#1072#1103#1074#1086#1082' '#1085#1072#1093#1086#1076#1103#1097#1080#1093#1089#1103' '#1074' '#1057#1052#1054
+    Caption = #1057#1088'. '#1095'. '#1086#1073#1089#1083#1091#1078#1077#1085#1085#1099#1093' '#1084#1091#1083#1100#1090#1080#1079#1072#1103#1074#1086#1082
   end
   object Label9: TLabel
     Left = 56
@@ -145,13 +141,6 @@ object Form1: TForm1
     Font.Style = []
     ParentFont = False
   end
-  object Label14: TLabel
-    Left = 90
-    Top = 411
-    Width = 119
-    Height = 13
-    Caption = #1057#1088'. '#1095'. '#1079#1072#1103#1074#1086#1082' '#1074' '#1086#1095#1077#1088#1077#1076#1080
-  end
   object Edit1: TEdit
     Left = 72
     Top = 8
@@ -203,7 +192,7 @@ object Form1: TForm1
   end
   object Edit4: TEdit
     Left = 232
-    Top = 440
+    Top = 408
     Width = 81
     Height = 21
     TabOrder = 5
@@ -218,21 +207,21 @@ object Form1: TForm1
   end
   object Edit6: TEdit
     Left = 232
-    Top = 303
+    Top = 312
     Width = 81
     Height = 21
     TabOrder = 11
   end
   object Edit7: TEdit
     Left = 232
-    Top = 336
+    Top = 344
     Width = 81
     Height = 21
     TabOrder = 12
   end
   object Edit8: TEdit
     Left = 232
-    Top = 371
+    Top = 376
     Width = 81
     Height = 21
     TabOrder = 13
@@ -340,13 +329,6 @@ object Form1: TForm1
     Height = 17
     Caption = '1 '#1082#1072#1085#1072#1083', '#1073#1077#1089#1082#1086#1085#1077#1095#1085#1072#1103' '#1086#1095#1077#1088#1077#1076#1100
     TabOrder = 20
-    OnClick = RadioButton6Click
-  end
-  object Edit11: TEdit
-    Left = 232
-    Top = 403
-    Width = 81
-    Height = 21
-    TabOrder = 21
+    OnClick = RadioButton5Click
   end
 end

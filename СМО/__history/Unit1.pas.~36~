@@ -1118,7 +1118,7 @@ begin
      r:=0;
      for i:=S+1 to KS-1 do r:=i*M[i+1]+r; //ср ч  заявок в очереди
      Form1.Edit11.Text:=floattostr(r);
-     r:=(1-(M[S]+M[S-1]))*(a/b)+r;   //ср ч  заявок в смо !!!!проверить
+     r:=(1-(M[S]+M[S-1]))*(a+a2+a3/(3*b))+r;   //ср ч  заявок в смо !!!!проверить
      Form1.Edit8.Text:=floattostr(r);
    M:=nil;
 
@@ -1127,7 +1127,7 @@ end;
 //------------------- Одноканальн., с очередью, заявки по 3, 2 и 1 -------------
 procedure Cicle_321(S:Integer; a,a2,a3,b:Double);
 var
- p0,pn1,pn2,pn3,pn4,pn5,summ,t,r: double;
+ p0,pn1,pn2,pn3,pn4,pn5,summ,t: double;
  i: integer;
  M:array of double;
 begin
@@ -1188,12 +1188,6 @@ begin
 
      Form1.Edit6.Text:=floattostr(M[S]+M[S-1]+M[S-2]); //вероят отказа
      Form1.Edit7.Text:=floattostr(1-M[0]); //ср число занятых каналов
-
-     r:=0;
-     for i:=1 to S-1 do r:=i*M[i+1]+r; //ср ч  заявок в очереди
-     Form1.Edit11.Text:=floattostr(r);
-     r:=(1-(M[S]+M[S-1]+M[S-2]))*(a/b+a2/b+a3/b)+r;           //ср ч  заявок в смо !!!!проверить
-     Form1.Edit8.Text:=floattostr(r);
    M:=nil;
 
 end;
@@ -1378,12 +1372,7 @@ begin
      for i:=1 to S do r:=i*M[i]+r;
      for i:=S+1 to K do r:=S*M[i]+r;
      Form1.Edit7.Text:=floattostr(r);  //ср число занятых каналов
-
-      r:=0;
-     for i:=1 to S-1 do r:=i*M[i+1]+r; //ср ч  заявок в очереди
-     Form1.Edit11.Text:=floattostr(r);
-     r:=(1-(M[S]+M[S-1]+M[KS-2]))*(a/b+a2/b+a3/b)+r;    //ср ч  заявок в смо !!!!проверить
-     Form1.Edit8.Text:=floattostr(r);
+     Form1.Edit8.Text:=floattostr(r);  //ср ч обслуж заявок
    M:=nil;
 
 end;
@@ -1394,7 +1383,6 @@ begin
  if RadioGroup2.ItemIndex=1 then begin
   RadioButton4.Enabled:= false;
   RadioButton5.Enabled:= false;
-  RadioButton6.Enabled:= false;
   Edit9.Enabled := false;
   Edit10.Enabled:= false;
   Edit1.Enabled:=  true;
@@ -1402,7 +1390,6 @@ begin
  if RadioGroup2.ItemIndex=0 then begin
   RadioButton4.Enabled:= true;
   RadioButton5.Enabled:= true;
-  RadioButton6.Enabled:= true;
   Edit9.Enabled:=  false;
   Edit10.Enabled:=  false;
   Edit1.Enabled:=  true;
@@ -1410,7 +1397,6 @@ begin
  if RadioGroup2.ItemIndex=2 then begin
   RadioButton4.Enabled:= false;
   RadioButton5.Enabled:= false;
-  RadioButton6.Enabled:= false;
   Edit9.Enabled:=  true;
   Edit10.Enabled:=  false;
   Edit1.Enabled:=  true;
@@ -1418,8 +1404,21 @@ begin
  if RadioGroup2.ItemIndex=3 then begin
   RadioButton4.Enabled:= false;
   RadioButton5.Enabled:= false;
-  RadioButton6.Enabled:= false;
   Edit9.Enabled:=  true;
+  Edit10.Enabled:=  true;
+  Edit1.Enabled:=  true;
+ end;
+ if RadioGroup2.ItemIndex=4 then begin
+  RadioButton4.Enabled:= false;
+  RadioButton5.Enabled:= false;
+  Edit9.Enabled:=  true;
+  Edit10.Enabled:=  true;
+  Edit1.Enabled:=  false;
+ end;
+ if RadioGroup2.ItemIndex=5 then begin
+  RadioButton4.Enabled:= false;
+  RadioButton5.Enabled:= false;
+  Edit9.Enabled:=  false;
   Edit10.Enabled:=  true;
   Edit1.Enabled:=  true;
  end;
