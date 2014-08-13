@@ -20,6 +20,7 @@ type
     Label4: TLabel;
     Label5: TLabel;
     Edit5: TEdit;
+    RadioGroup1: TRadioGroup;
     RadioButton1: TRadioButton;
     RadioButton2: TRadioButton;
     RadioButton3: TRadioButton;
@@ -32,16 +33,6 @@ type
     Edit8: TEdit;
     RadioButton5: TRadioButton;
     Button2: TButton;
-    Edit9: TEdit;
-    Edit10: TEdit;
-    Label9: TLabel;
-    Label10: TLabel;
-    Label11: TLabel;
-    Label12: TLabel;
-    Label13: TLabel;
-    RadioGroup2: TRadioGroup;
-    GroupBox1: TGroupBox;
-    RadioButton6: TRadioButton;
     procedure Button1Click(Sender: TObject);
     procedure RadioButton1Click(Sender: TObject);
     procedure RadioButton2Click(Sender: TObject);
@@ -50,7 +41,6 @@ type
     procedure RadioButton4Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure RadioButton5Click(Sender: TObject);
-    procedure RadioGroup2Click(Sender: TObject);
 
   private
     { Private declarations }
@@ -64,46 +54,33 @@ var
   Form1: TForm1;
   procedure Cicle0(n:Integer; a,b,p0:Double);
   procedure Cicle1(S:Integer; a,b,p0:Double);
-  procedure Cicle1n(a,b:Double);
   procedure Cicle2(S:Integer; a,b,p0:Double);
   procedure Cicle3(S,K:Integer; a,b,p0:Double);
   procedure Cicle4(S,K:Integer; a,b,p0:Double);
   procedure Cicle5(S:Integer;Zmas:TArr; a,b:Double);
-  procedure Cicle_21(S:Integer; a,a2,b:Double; z:Boolean);
-  procedure Cicle_2nm(S,K:Integer; a,a2,b:Double);
-  procedure Cicle_31(S:Integer; a,b:Double);
-  procedure Cicle_3n(S:Integer; a,b:Double);
-  procedure Cicle_3nm(S,K:Integer; a,b:Double);
-  procedure Cicle_321(S:Integer; a,a2,a3,b:Double);
-  procedure Cicle_321n(S:Integer; a,a2,a3,b:Double);
-  procedure Cicle_321nm(S,K:Integer; a,a2,a3,b:Double);
-  
 implementation
+
+uses Unit2;
 
 {$R *.dfm}
 
 procedure TForm1.Button1Click(Sender: TObject);
 //type Mas = array of double;
 var
- a,a2,a3,b,p0: double;
+ a,b,p0: double;
  S,K,j: integer;
- z: Boolean;
+
 begin
   a:=strtofloat(Edit1.text);
-  a2:=strtofloat(Edit9.text);
-  a3:=strtofloat(Edit10.text);
   b:=strtofloat(Edit2.text);
   S:=strtoint(Edit3.text); // Кол-во каналов
   K:=strtoint(Edit5.text); // Очередь
   p0:=0;
-  z:=false;
    StringGrid1.Cells[0,0]:='Состояние';
    StringGrid1.Cells[1,0]:='Вероятность';
    StringGrid1.RowCount:=S+2;
 
-//.............................................//мультизаявки по 2
- if Form1.RadioGroup2.ItemIndex=0 then begin
-  if  RadioButton1.Checked = true then begin  //однокан. с очередью
+ if  RadioButton1.Checked = true then begin  //однокан. с очередью
    Form1.StringGrid1.ColCount:=2;
    Form1.StringGrid1.ColWidths[0]:=150;
    Form1.StringGrid1.ColWidths[1]:=150;
@@ -111,139 +88,47 @@ begin
    if S>=3 then Cicle1(S,a,b,p0);
   end;
 
-  if RadioButton2.Checked = true then begin  //многокан, без взаимопомощи
+ if RadioButton2.Checked = true then begin  //многокан, без взаимопомощи
     Form1.StringGrid1.ColCount:=2;
     Form1.StringGrid1.ColWidths[0]:=150;
     Form1.StringGrid1.ColWidths[1]:=150;
     if S=2 then Cicle0(2,a,b,p0);
     if S>=3 then Cicle2(S,a,b,p0);
-  end;
+ end;
 
-  if RadioButton3.Checked = true then begin  //многокан, с очередью
+ if RadioButton3.Checked = true then begin  //многокан, с очередью
    //if (S>K) and (S>=3) then Cicle3(S,K,a,b,p0);
-   StringGrid1.RowCount:=S+K+2;
    Form1.StringGrid1.ColCount:=2;
    Form1.StringGrid1.ColWidths[0]:=150;
    Form1.StringGrid1.ColWidths[1]:=150;
    if K=0 then Cicle2(S,a,b,p0);
    Cicle3(S,K,a,b,p0);
-  end;
+ end;
 
-  if RadioButton4.Checked = true then begin  //многокан. с взаимопомощью (все как один)
+ if RadioButton4.Checked = true then begin  //многокан. с взаимопомощью (все как один)
     Form1.StringGrid1.ColCount:=2;
     Form1.StringGrid1.ColWidths[0]:=150;
     Form1.StringGrid1.ColWidths[1]:=150;
     Cicle4(S,K,a,b,p0);
-  end;
+ end;
 
-  if RadioButton5.Checked = true then begin  //многокан. разная интенсивность обслуживания
-   Form1.StringGrid1.ColCount:=3;
-   Form1.StringGrid1.ColWidths[0]:=50;
-   Form1.StringGrid1.ColWidths[1]:=100;
-   Form1.StringGrid1.ColWidths[2]:=100;
-   Form1.StringGrid1.RowCount:=S+2;
-   for j:=2 to S+1 do StringGrid1.Cells[0,j]:=inttostr(j-1);
+ if RadioButton5.Checked = true then begin  //многокан. разная интенсивность обслуживания
+  Form1.StringGrid1.ColCount:=3;
+  Form1.StringGrid1.ColWidths[0]:=50;
+  Form1.StringGrid1.ColWidths[1]:=100;
+  Form1.StringGrid1.ColWidths[2]:=100;
+  Form1.StringGrid1.RowCount:=S+2;
+   for j:=1 to S do StringGrid1.Cells[0,j]:=inttostr(j);
       StringGrid1.Cells[0,0]:='Канал';
       StringGrid1.Cells[1,0]:='Интенсивность';
       StringGrid1.Cells[2,0]:='Вероятность';
      Form1.Button2.Visible:=true;
-  end;
-
-  if  RadioButton6.Checked = true then begin  //однокан. с бесконеч очередью
-   Form1.StringGrid1.ColCount:=2;
-   Form1.StringGrid1.ColWidths[0]:=150;
-   Form1.StringGrid1.ColWidths[1]:=150;
-   if (2*a)/b<1 then Cicle1n(a,b)
-   else showmessage('Ошибка! Интенсивность поступления заявок больше(или равно) чем интенсивность обслуживания');
-  end;
+   // if (not Assigned(Form2)) then Form2:=TForm2.Create(Self);
+   // Form2.Show;
+    //Form2.a:=a;
+    //Form2.b:=b;
+    //Cicle5(S,a,b,p0);
  end;
- 
-//...........................................//мультизаявки по 3................
- if Form1.RadioGroup2.ItemIndex=1 then begin 
-   if  RadioButton1.Checked = true then begin  //однокан. с очередью
-    Form1.StringGrid1.ColCount:=2;
-    Form1.StringGrid1.ColWidths[0]:=150;
-    Form1.StringGrid1.ColWidths[1]:=150;
-    if S>=3 then Cicle_31(S,a,b)
-    else showmessage('Ошибка, каналов не должно быть меньше 3');
-   end;
-
-   if  RadioButton2.Checked = true then begin  //многокан
-    Form1.StringGrid1.ColCount:=2;
-    Form1.StringGrid1.ColWidths[0]:=150;
-    Form1.StringGrid1.ColWidths[1]:=150;
-    if S>=3 then  Cicle_3n(S,a,b)
-    else showmessage('Ошибка, каналов не должно быть меньше 3');
-   end;
-
-   if  RadioButton3.Checked = true then begin  //многокан с очередью
-    StringGrid1.RowCount:=S+K+2;
-    Form1.StringGrid1.ColCount:=2;
-    Form1.StringGrid1.ColWidths[0]:=150;
-    Form1.StringGrid1.ColWidths[1]:=150;
-    if (S>=2)and(K>=1) then  Cicle_3nm(S,K, a,b)
-    else showmessage('Ошибка, каналов должно быть не менее 2, очередь не менее 1');
-   end;
- end;
-
-//...........................................//мультизаявки по 2 и по 1.........
- if Form1.RadioGroup2.ItemIndex=2 then begin
-   if  RadioButton1.Checked = true then begin  //однокан. с очередью
-    Form1.StringGrid1.ColCount:=2;
-    Form1.StringGrid1.ColWidths[0]:=150;
-    Form1.StringGrid1.ColWidths[1]:=150;
-    z:=false;
-    if S>=2 then Cicle_21(S,a,a2,b,z)
-    else showmessage('Ошибка, каналов не должно быть меньше 2');
-   end;
-
-   if  RadioButton2.Checked = true then begin  //многоканальная без очереди
-    Form1.StringGrid1.ColCount:=2;
-    Form1.StringGrid1.ColWidths[0]:=150;
-    Form1.StringGrid1.ColWidths[1]:=150;
-    z:=true;
-    if S>=2 then Cicle_21(S,a,a2,b,z)
-    else showmessage('Ошибка, каналов не должно быть меньше 2');
-   end;
-
-   if  RadioButton3.Checked = true then begin  //многоканальная с очередью
-    StringGrid1.RowCount:=S+K+2;
-    Form1.StringGrid1.ColCount:=2;
-    Form1.StringGrid1.ColWidths[0]:=150;
-    Form1.StringGrid1.ColWidths[1]:=150;
-    if (S>=2)and(K>=1) then  Cicle_2nm(S,K, a,a2,b)
-    else showmessage('Ошибка, каналов не должно быть меньше 2, очередь менее 1');
-   end;
- end;
-
-//............................................//мультизаявки по 3, 2 и 1........
-  if Form1.RadioGroup2.ItemIndex=3 then begin
-   if  RadioButton1.Checked = true then begin  //однокан. с очередью
-    Form1.StringGrid1.ColCount:=2;
-    Form1.StringGrid1.ColWidths[0]:=150;
-    Form1.StringGrid1.ColWidths[1]:=150;
-    if S>=3 then Cicle_321(S, a,a2,a3,b)
-    else showmessage('Ошибка, каналов не должно быть меньше 3');
-   end;
-
-   if  RadioButton2.Checked = true then begin  //однокан. с очередью
-    Form1.StringGrid1.ColCount:=2;
-    Form1.StringGrid1.ColWidths[0]:=150;
-    Form1.StringGrid1.ColWidths[1]:=150;
-    if S>=3 then Cicle_321n(S, a,a2,a3,b)
-    else showmessage('Ошибка, каналов не должно быть меньше 3');
-   end;
-
-   if  RadioButton3.Checked = true then begin  //многоканальная с очередью
-    StringGrid1.RowCount:=S+K+2;
-    Form1.StringGrid1.ColCount:=2;
-    Form1.StringGrid1.ColWidths[0]:=150;
-    Form1.StringGrid1.ColWidths[1]:=150;
-    if (S>=2)and(K>=1)  then Cicle_321nm(S,K, a,a2,a3,b)
-    else showmessage('Ошибка, каналов не должно быть меньше 2, очередь менее 1');
-   end;
- end;
-
 end;
 //-------------------------------------------------------------------------------
 procedure Cicle0(n:Integer; a,b,p0:Double); //Если имеется только 2 канала
@@ -364,54 +249,51 @@ begin
      Form1.Edit8.Text:=floattostr(k);
     M:=nil;
 end;
-
-//---------------------------------------------//Многоканальная с очередью, 2 заявки
- procedure Cicle3(S,K:Integer; a,b,p0:Double); 
+//------------------------------------------------------------------------------
+ procedure Cicle3(S,K:Integer; a,b,p0:Double); //Многоканальная с очередью
 var
- c,pn1,pn2,pn3,summ,t: double;                
- i, KS: integer;
+ c,pn1,pn2,pn3,summ,t: double;                // S и K поменять местами, K очередь
+ i: integer;
  M:array of double;
 begin
  summ:=1;
  t:=0;
  c:=a/b;
- KS:=K+S;
   pn1:= c;
   pn2:= c/2+(c*c)/2;
   pn3:=0;
-  SetLength(M, K+S+1);
+  SetLength(M, S+1);
    M[0]:=0;
    M[1]:=pn1;
    M[2]:=pn2;
-   if S>=3 then begin
-    for i := 3 to S do  begin
+    for i := 3 to K do
+    begin
        p0:=c*(pn1+pn2)/i;
        pn3:=pn1*c/i;
        pn1:=pn2;
        pn2:=p0;
        M[i]:=p0;
     end;
-   end;
-      for i := 1 to K do begin // очередь
-       p0:=c*(pn1+pn2)/S;
-       pn3:=pn1*c/S;
+      for i := K+1 to S do // очередь
+      begin
+       p0:=c*(pn1+pn2); // делить на K?
+       pn3:=pn1*c;
        pn1:=pn2;
        pn2:=p0;
-       M[S+i]:=p0;
+       M[i]:=p0;
       end;
-   M[KS]:=pn3;
-   for i := 1 to KS do summ:=summ + M[i];
+   M[S]:=pn3;
+   for i := 1 to S do summ:=summ + M[i];
     M[0]:=1/summ;
     //M[0]:=roundTo(1/summ,-7);
-    for i:= 1 to KS do
+    for i:= 1 to S do
     begin
      M[i]:=M[0]*M[i];
      //M[i]:=roundTo(M[0]*M[i],-7);
      Form1.StringGrid1.Cells[1,i+1]:=floattostr(M[i]);
      Form1.StringGrid1.Cells[0,i+1]:=inttostr(i);
     end;
-
-     for i:=0 to KS do
+     for i:=0 to S do
      begin
       t:=t+M[i];
       Form1.Edit4.Text:=floattostr(t);
@@ -472,8 +354,8 @@ begin
      Form1.Edit8.Text:=floattostr((1-(M[S]+M[S-1])*c));
    M:=nil;
 end;
-//---------------------//Многокан, заявки по 2, разная интенсивность обслуживания
-procedure Cicle5(S:Integer; Zmas:TArr; a,b:Double);
+//------------------------------------------------------------------------------
+procedure Cicle5(S:Integer; Zmas:TArr; a,b:Double);//Многокан, разная интенсивность обслуживания
 var
  pn1,pn2,pn3,summ,t,k,p0: double;
  i: integer;
@@ -483,21 +365,21 @@ p0:=0;
  summ:=1;
  t:=0;
   pn1:= a/Zmas[0];
-  pn2:= a/(2*Zmas[1])+(a*a)/(2*Zmas[1]*Zmas[0]);
+  pn2:= a/Zmas[1]+(a*a)/(Zmas[1]*Zmas[0]);
   pn3:=0;
   SetLength(M, S+1);
   M[0]:=0;
    if S=2 then begin
     M[1]:=pn1;
-    M[2]:=a/(2*Zmas[1]);
+    M[2]:=a/Zmas[1];
    end;
     if S>=3 then begin
      M[1]:=pn1;
      M[2]:=pn2;
      for i := 3 to S do
      begin
-       p0:=a*(pn1+pn2)/(i*Zmas[i-1]);
-       pn3:=pn1*a/(i*Zmas[i-1]);
+       p0:=a*(pn1+pn2)/Zmas[i-1];
+       pn3:=pn1*a/Zmas[i-1];
        pn1:=pn2;
        pn2:=p0;
        M[i]:=p0;
@@ -528,72 +410,7 @@ p0:=0;
      Form1.Edit8.Text:=floattostr(k);
    M:=nil; Zmas:=nil;
 end;
-
-//------------------------------------------- //Одноканальн., с бесконечной очередью
-procedure Cicle1n(a,b:Double);
-var
- c,p0,pn1,pn2,pn3,summ,t: double;
- i,S: integer;
- n: boolean;
- M:array of double;
-begin
- summ:=1;
- t:=0;
- S:=2;
- c:=a/b;
-  pn1:= c;
-  pn2:= c+c*c;
-  pn3:=0;
-   n:=true;
-   i:=0;
-   while n=true do begin
-    p0:=c*(pn1+pn2);
-    pn3:=pn1*c;
-    pn1:=pn2;
-    pn2:=p0;
-    if pn3<=0.0002 then n:=false
-    else i:=i+1;
-    S:=i;
-   end;
-   Form1.StringGrid1.RowCount:=S+2;
-
-  pn1:= c;
-  pn2:= c+c*c;
-  pn3:=0;
-   SetLength(M, S+1);
-   M[0]:=0;
-   M[1]:=pn1;
-   M[2]:=pn2;
-    for i := 1 to S-2 do begin
-       p0:=c*(pn1+pn2);
-       pn3:=pn1*c;
-       pn1:=pn2;
-       pn2:=p0;
-       M[i+2]:=p0;
-    end;
-   M[S]:=pn3;
-   for i := 1 to S do summ:=summ + M[i];
-   M[0]:=1/summ; //Вероятность нулевого состояния
-   //M[0]:=roundTo(1/summ,-7);
-  for i:= 1 to S do begin
-    M[i]:=M[0]*M[i];
-    //M[i]:=roundTo(M[0]*M[i],-7);
-    Form1.StringGrid1.Cells[1,i+1]:=floattostr(M[i]);
-    Form1.StringGrid1.Cells[0,i+1]:=inttostr(i);
-  end;
-    Form1.StringGrid1.Cells[1,1]:=floattostr(M[0]);
-    Form1.StringGrid1.Cells[0,1]:='0';
-
-     for i:=0 to S do begin  //контроль
-      t:=t+M[i];
-      Form1.Edit4.Text:=floattostr(t);
-     end;
-     Form1.Edit6.Text:=floattostr(M[S]+M[S-1]); //вероят отказа
-     Form1.Edit7.Text:=floattostr(1-M[0]); //ср число занятых каналов
-   M:=nil;
-end;
 //------------------------------------------------------------------------------
-
 procedure TForm1.RadioButton1Click(Sender: TObject);
 begin
  Label5.Visible:= false;
@@ -620,6 +437,7 @@ begin
  Label5.Visible:= false;
  Edit5.Visible:= false;
  Form1.Button1.Caption:='Расчет'
+ //Button2.Visible:=false;
 end;
 
 procedure TForm1.RadioButton4Click(Sender: TObject);
@@ -627,14 +445,6 @@ begin
  Label5.Visible:= false;
  Edit5.Visible:= false;
  Form1.Button1.Caption:='Расчет'
-// Button2.Visible:=false;
-end;
-
-procedure TForm1.RadioButton5Click(Sender: TObject);
-begin
- Label5.Visible:= false;
- Edit5.Visible:= false;
- Form1.Button1.Caption:='Заполнение'
 end;
 //------------------------------------------------------------------------------
 
@@ -659,710 +469,14 @@ begin
   else ShowMessage('Заполните всю таблицу');
   Cicle5(S,Zmas, a,b);
 end;
-
-//------------------//Одноканальная и многоканальная, заявки по 2 и по 1 -------
- procedure Cicle_21(S:Integer; a,a2,b:Double; z:Boolean);
-var
- p0,pn1,pn2,pn3,summ,t,k: double;
- i: integer;
- M:array of double;
-begin
- summ:=1;
- t:=0;
-  pn1:= a/b+a2/b;
-  pn2:= a2/b+(a/b)*(a/b)+2*(a*a2)/(b*b)+(a2*a2)/(b*b);
-  pn3:=0;
-  SetLength(M, S+1);
-   M[0]:=0;
-
- if z= false then begin  //однокональная смо
-  if  S=2 then begin //если только 2 канала
-   M[1]:=a/b+a2/b;
-   M[2]:=a*a/(b*b)+a2*a/(b*b)+a2/b;
-  end;
-      if S>=3 then begin  //3 и более каналов
-       M[1]:=pn1;
-       M[2]:=pn2;
-       for i := 3 to S do  begin
-        p0:=pn1*a2/b+pn2*a2/b+pn2*a/b;
-        pn3:=pn1*a2/b+pn2*a/b;
-        pn1:=pn2;
-        pn2:=p0;
-        M[i]:=p0;
-       end;
-      M[S]:=pn3;
-      end;
- end;
-
- if z= true then begin //многокональная
-  if  S=2 then begin //если только 2 канала
-   M[1]:=a/b+a2/b;
-   M[2]:=(a*a/(b*b)+a2*a/(b*b)+a2/b)/S;
-  end;
-      if S>=3 then begin  //3 и более каналов
-        M[1]:=pn1;
-        pn2:=pn2/2;
-        M[2]:=pn2;
-       for i := 3 to S do  begin
-        p0:=(pn1*a2/b+pn2*a2/b+pn2*a/b)/i;
-        pn3:=(pn1*a2/b+pn2*a/b)/i;
-        pn1:=pn2;
-        pn2:=p0;
-        M[i]:=p0;
-      end;
-       M[S]:=pn3;
-     end;
- end;
-
-   for i := 1 to S do summ:=summ + M[i];   //вероятность нулевого состояния
-    M[0]:=1/summ;
-    //M[0]:=roundTo(1/summ,-7);
-    for i:= 1 to S do begin             //находятся конечные вероятности
-     M[i]:=M[0]*M[i];
-     //M[i]:=roundTo(M[0]*M[i],-7);
-     Form1.StringGrid1.Cells[1,i+1]:=floattostr(M[i]);
-     Form1.StringGrid1.Cells[0,i+1]:=inttostr(i);
-    end;
-
-     for i:=0 to S do begin //контрольная сумма
-      t:=t+M[i];
-      Form1.Edit4.Text:=floattostr(t);
-     end;
-    Form1.StringGrid1.Cells[1,1]:=floattostr(M[0]);
-    Form1.StringGrid1.Cells[0,1]:='0';
-
-    Form1.Edit6.Text:=floattostr(M[S]+M[S-1]); //вероят отказа
-   if z= false then begin  //проверка для однокональной смо
-    Form1.Edit7.Text:=floattostr(1-M[0]); //ср число занятых каналов
-    Form1.Edit8.Text:=floattostr(1-M[0]);  //ср ч обслуж заявок
-   end;
-   if z= true then begin  //проверка для многокональной смо
-    k:=0;
-     for i:=1 to S do k:=i*M[i]+k;
-     Form1.Edit7.Text:=floattostr(k);  //ср число занятых каналов
-     Form1.Edit8.Text:=floattostr(k);  //ср ч обслуж заявок
-   end;
-
-   M:=nil;
-
-end;
-
-//------------------//Многоканальная с очередью, заявки по 2 и по 1 -------
- procedure Cicle_2nm(S,K:Integer; a,a2,b:Double);
-var
- p0,pn1,pn2,pn3,summ,t,r: double;
- i,KS: integer;
- M:array of double;
-begin
- summ:=1;
- t:=0;
- KS:=S+K;
-  pn1:= a/b+a2/b;
-  pn2:= (a2/b+(a/b)*(a/b)+2*(a*a2)/(b*b)+(a2*a2)/(b*b))/2;
-  pn3:=0;
-  SetLength(M, KS+1);
-   M[0]:=0;
-   M[1]:=pn1;
-   M[2]:=pn2;
-      if S>=3 then begin  //3 и более каналов
-       for i := 3 to S do  begin
-        p0:=(pn1*a2/b+pn2*a2/b+pn2*a/b)/i;
-        pn3:=(pn1*a2/b+pn2*a/b)/i;
-        pn1:=pn2;
-        pn2:=p0;
-        M[i]:=p0;
-       end;
-      end;
-
-      for i := 1 to K do  begin    //очередь
-        p0:=(pn1*a2/b+pn2*a2/b+pn2*a/b)/S;
-        pn3:=(pn1*a2/b+pn2*a/b)/S;
-        pn1:=pn2;
-        pn2:=p0;
-        M[S+i]:=p0;
-       end;
-       M[KS]:=pn3;
-
-   for i := 1 to KS do summ:=summ + M[i];   //вероятность нулевого состояния
-    M[0]:=1/summ;
-    //M[0]:=roundTo(1/summ,-7);
-    for i:= 1 to KS do begin             //находятся конечные вероятности
-     M[i]:=M[0]*M[i];
-     //M[i]:=roundTo(M[0]*M[i],-7);
-     Form1.StringGrid1.Cells[1,i+1]:=floattostr(M[i]);
-     Form1.StringGrid1.Cells[0,i+1]:=inttostr(i);
-    end;
-    Form1.StringGrid1.Cells[1,1]:=floattostr(M[0]);
-    Form1.StringGrid1.Cells[0,1]:='0';
-
-     for i:=0 to KS do begin //контрольная сумма
-      t:=t+M[i];
-      Form1.Edit4.Text:=floattostr(t);
-     end;
-
-    Form1.Edit6.Text:=floattostr(M[KS]+M[KS-1]); //вероят отказа
-     r:=0;  //ср число занятых каналов
-     for i:=1 to S do r:=i*M[i]+r;
-     for i:=S+1 to KS do r:=M[i]*S+r;
-     Form1.Edit7.Text:=floattostr(r);
-
-   M:=nil;
-
-end;
-//-------------------__Одноканальн., с очередью, заявки по 3__------------------
-procedure Cicle_31(S:Integer; a,b:Double);
-var
- c,p0,pn1,pn2,pn3,pn4,pn5,summ,t: double;
- i: integer;
- M:array of double;
-begin
- summ:=1;
- t:=0;
- c:=a/b;
-  p0:=0;
-  pn1:= c;  //вероятность первого состояния
-  pn2:= c+c*c; //вероятность 2го состояния
-  pn3:= c+c*c+c*c+c*c*c;
-  pn4:=0;
-  SetLength(M, S+1);
-   M[0]:=0;
-  if  S=3 then begin //если только 3 канала
-   M[1]:=pn1;
-   M[2]:=c;
-   M[3]:=c;
-   M[0]:=1/(1+M[3]+M[2]+M[1]);
-  end;
-  if  S=4 then begin  //если только 4 канала
-   M[1]:=pn1;
-   M[2]:=pn2;
-   M[3]:=pn2;
-   M[4]:=c*c;
-   M[0]:=1/(1+M[4]+M[3]+M[2]+M[1]);
-  end;
-  if S>=5 then begin  //более 5 каналов
-   M[1]:=pn1;
-   M[2]:=pn2;
-   M[3]:=pn3;
-    for i := 4 to S-1 do begin
-       p0:=c*(pn1+pn2+pn3);
-       pn4:=(pn1+pn2)*c;
-       pn5:=pn2*c;
-       pn1:=pn2;
-       pn2:=pn3;
-       pn3:=p0;
-       M[i]:=p0;
-    end;
-   M[S-1]:=pn4;
-   M[S]:=pn5;
-  end;
-   for i := 1 to S do summ:=summ + M[i];
-   M[0]:=1/summ; //Вероятность нулевого состояния
-   //M[0]:=roundTo(1/summ,-7);
-  for i:= 1 to S do begin  //конечные вероятности
-    M[i]:=M[0]*M[i];
-    //M[i]:=roundTo(M[0]*M[i],-7);
-    Form1.StringGrid1.Cells[1,i+1]:=floattostr(M[i]);
-    Form1.StringGrid1.Cells[0,i+1]:=inttostr(i);
-  end;
-    Form1.StringGrid1.Cells[1,1]:=floattostr(M[0]);
-    Form1.StringGrid1.Cells[0,1]:='0';
-
-     for i:=0 to S do begin  //контроль
-      t:=t+M[i];
-      Form1.Edit4.Text:=floattostr(t);
-     end;
-     Form1.Edit6.Text:=floattostr(M[S]+M[S-1]+M[S-2]); //вероят отказа
-     //for i:=0 to 1 do k:=i*M[i]+k;
-     Form1.Edit7.Text:=floattostr(1-M[0]); //ср число занятых каналов
-     //Form1.Edit8.Text:=floattostr(r);  //ср ч обслуж заявок
-   M:=nil;
-
-end;
-
-//-------------------__Многоканальная, заявки по 3__----------------------------
-procedure Cicle_3n(S:Integer; a,b:Double);
-var
- c,p0,pn1,pn2,pn3,pn4,pn5,summ,t,k: double;
- i: integer;
- M:array of double;
-begin
- summ:=1;
- t:=0;
- c:=a/b;
-  p0:=0;
-  pn1:= c;  //вероятность первого состояния
-  pn2:= (c+c*c)/2; //вероятность 2го состояния
-  pn4:=0;
-  SetLength(M, S+1);
-   M[0]:=0;
-  if  S=3 then begin //если только 3 канала
-   M[1]:=pn1;
-   M[2]:=c/2;
-   M[3]:=c/3;
-   M[0]:=1/(1+M[3]+M[2]+M[1]);
-  end;
-  if  S=4 then begin  //если только 4 канала
-   M[1]:=pn1;
-   M[2]:=pn2;
-   M[3]:=(c+c*c)/3;
-   M[4]:=c*c/4;
-   M[0]:=1/(1+M[4]+M[3]+M[2]+M[1]);
-  end;
-  if S>=5 then begin  //более 5 каналов
-   M[1]:=pn1;
-   M[2]:=pn2;
-   pn3:= (c+c*c+pn2*c)/3;
-   M[3]:=pn3;
-    for i := 4 to S-1 do begin
-       p0:=c*(pn1+pn2+pn3)/i;
-       pn4:=(pn1+pn2)*c/i;
-       pn5:=pn2*c/(i+1);
-       pn1:=pn2;
-       pn2:=pn3;
-       pn3:=p0;
-       M[i]:=p0;
-    end;
-   M[S-1]:=pn4;
-   M[S]:=pn5;
-  end;
-   for i := 1 to S do summ:=summ + M[i];
-   M[0]:=1/summ; //Вероятность нулевого состояния
-   //M[0]:=roundTo(1/summ,-7);
-  for i:= 1 to S do begin  //конечные вероятности
-    M[i]:=M[0]*M[i];
-    //M[i]:=roundTo(M[0]*M[i],-7);
-    Form1.StringGrid1.Cells[1,i+1]:=floattostr(M[i]);
-    Form1.StringGrid1.Cells[0,i+1]:=inttostr(i);
-  end;
-    Form1.StringGrid1.Cells[1,1]:=floattostr(M[0]);
-    Form1.StringGrid1.Cells[0,1]:='0';
-
-     for i:=0 to S do begin  //контроль
-      t:=t+M[i];
-      Form1.Edit4.Text:=floattostr(t);
-     end;
-     Form1.Edit6.Text:=floattostr(M[S]+M[S-1]+M[S-2]); //вероят отказа
-     //for i:=0 to 1 do k:=i*M[i]+k;
-     k:=0;
-     for i:=1 to S do k:=i*M[i]+k;
-     Form1.Edit7.Text:=floattostr(k);  //ср число занятых каналов
-     Form1.Edit8.Text:=floattostr(k);  //ср ч обслуж заявок
-   M:=nil;
-
-end;
-
-//-------------------__Многоканальная с очередью, заявки по 3__----------------------------
-procedure Cicle_3nm(S,K:Integer; a,b:Double);
-var
- c,p0,pn1,pn2,pn3,pn4,pn5,summ,t,r: double;
- i,KS: integer;
- M:array of double;
-begin
- summ:=1;
- c:=a/b;
-  p0:=0;
-  pn1:= c;  //вероятность первого состояния
-  pn2:= (c+c*c)/2; //вероятность 2го состояния
-  pn4:=0;
-  pn5:=0;
-   KS:=K+S;
-   SetLength(M, KS+1);
-   M[0]:=0;
-  if  (S=2) and (K=1) then begin //если только 2 канала и 1 очередь
-   M[1]:=pn1;
-   M[2]:=c/2;
-   M[3]:=c/2;
-   M[0]:=1/(1+M[3]+M[2]+M[1]);
-  end;
-  if  (S=2) and (K=2) then begin  //если только 2 канала и 2 очереди
-   M[1]:=pn1;
-   M[2]:=pn2;
-   M[3]:=(c+c*c)/2;
-   M[4]:=c*c/2;
-   M[0]:=1/(1+M[4]+M[3]+M[2]+M[1]);
-  end;
-  if  (S=3) and (K=1) then begin  //если только 2 канала и 2 очереди
-   M[1]:=pn1;
-   M[2]:=pn2;
-   M[3]:=(c+c*c)/3;
-   M[4]:=c*c/3;
-   M[0]:=1/(1+M[4]+M[3]+M[2]+M[1]);
-  end;
-
-  if (S=2)and(K>=3) then begin  // 2 канала и любая очередь
-   M[1]:=pn1;
-   M[2]:=pn2;
-   pn3:=(c+pn1*c+pn2*c)/S;
-   M[3]:=pn3;
-   for i := 2 to K-1 do begin // очередь
-       p0:=c*(pn1+pn2+pn3)/S;
-       pn4:=(pn1+pn2)*c/S;
-       pn5:=pn2*c/S;
-       pn1:=pn2;
-       pn2:=pn3;
-       pn3:=p0;
-       M[S+i]:=p0;
-      end;
-   M[KS-1]:=pn4;
-   M[KS]:=pn5;
-  end;
-
-  if (S>=3)and(K>=2) then begin  //более 2 каналов и очередь
-   M[1]:=pn1;
-   M[2]:=pn2;
-   pn3:= (c+c*c+pn2*c)/3;
-   M[3]:=pn3;
-    if  S>=4 then begin
-     for i := 4 to S do begin
-       p0:=c*(pn1+pn2+pn3)/i;
-      // pn4:=(pn1+pn2)*c/i;
-      // pn5:=pn2*c/(i+1);
-       pn1:=pn2;
-       pn2:=pn3;
-       pn3:=p0;
-       M[i]:=p0;
-     end;
-    end;
-      for i := 1 to K-1 do begin // очередь
-       p0:=c*(pn1+pn2+pn3)/S;
-       pn4:=(pn1+pn2)*c/S;
-       pn5:=pn2*c/(S);
-       pn1:=pn2;
-       pn2:=pn3;
-       pn3:=p0;
-       M[S+i]:=p0;
-      end;
-   M[KS-1]:=pn4;
-   M[KS]:=pn5;
-  end;
-
-   for i := 1 to KS do summ:=summ + M[i];
-   M[0]:=1/summ; //Вероятность нулевого состояния
-   //M[0]:=roundTo(1/summ,-7);
-  for i:= 1 to KS do begin  //конечные вероятности
-    M[i]:=M[0]*M[i];
-    //M[i]:=roundTo(M[0]*M[i],-7);
-    Form1.StringGrid1.Cells[1,i+1]:=floattostr(M[i]);
-    Form1.StringGrid1.Cells[0,i+1]:=inttostr(i);
-  end;
-    Form1.StringGrid1.Cells[1,1]:=floattostr(M[0]);
-    Form1.StringGrid1.Cells[0,1]:='0';
-
-    t:=0;
-     for i:=0 to KS do begin  //контроль
-      t:=t+M[i];
-      Form1.Edit4.Text:=floattostr(t);
-     end;
-     Form1.Edit6.Text:=floattostr(M[KS]+M[KS-1]+M[KS-2]); //вероят отказа
-     //for i:=0 to 1 do k:=i*M[i]+k;
-     r:=0;
-     for i:=1 to KS do r:=i*M[i]+r;
-     Form1.Edit7.Text:=floattostr(r);  //ср число занятых каналов
-     Form1.Edit8.Text:=floattostr(r);  //ср ч обслуж заявок
-   M:=nil;
-
-end;
-
-//------------------- Одноканальн., с очередью, заявки по 3, 2 и 1 -------------
-procedure Cicle_321(S:Integer; a,a2,a3,b:Double);
-var
- p0,pn1,pn2,pn3,pn4,pn5,summ,t: double;
- i: integer;
- M:array of double;
-begin
- summ:=1;
- t:=0;
-  p0:=0;
-  pn1:= a/b+a2/b+a3/b;  //вероятность первого состояния
-  pn2:= 0;
-  pn3:= 0;
-  pn4:=0;
-  SetLength(M, S+1);
-   M[0]:=0;
-  if  S=3 then begin //если только 3 канала
-   M[1]:=pn1;
-   M[2]:=a3/b+a2/b+(a2+a)*pn1/b;
-   M[3]:=a3/b+M[1]*a2/b+M[2]*a/b;
-   M[0]:=1/(1+M[3]+M[2]+M[1]);
-  end;
-  if  S=4 then begin  //если только 4 канала
-   M[1]:=pn1;
-   M[2]:=a3/b+a2/b+(a3+a2+a)*pn1/b;
-   M[3]:=a3/b+(a3+a2)*M[1]/b+(a2+a)*M[2]/b;
-   M[4]:=M[1]*a3/b+M[2]*a2/b+M[3]*a/b;
-   M[0]:=1/(1+M[4]+M[3]+M[2]+M[1]);
-  end;
-  if S>=5 then begin  //более 5 каналов
-   M[1]:=pn1;
-   pn2:=a3/b+a2/b+(a3+a2+a)*pn1/b;
-   M[2]:= pn2;
-   pn3:= a3/b+(a3+a2)*M[1]/b+(a3+a2+a)*M[2]/b;
-   M[3]:= pn3;
-    for i := 4 to S-1 do begin
-       p0:=(pn1*a3+pn2*a3+pn2*a2+pn3*a3+pn3*a2+pn3*a)/b;
-       pn4:=(pn1*a3+pn2*a3+pn2*a2+pn3*a2+pn3*a)/b;
-       pn5:=(pn2*a3+pn3*a2+pn4*a)/b;
-       pn1:=pn2;
-       pn2:=pn3;
-       pn3:=p0;
-       M[i]:=p0;
-    end;
-   M[S-1]:=pn4;
-   M[S]:=pn5;
-  end;
-   for i := 1 to S do summ:=summ + M[i];
-   M[0]:=1/summ; //Вероятность нулевого состояния
-   //M[0]:=roundTo(1/summ,-7);
-  for i:= 1 to S do begin  //конечные вероятности
-    M[i]:=M[0]*M[i];
-    //M[i]:=roundTo(M[0]*M[i],-7);
-    Form1.StringGrid1.Cells[1,i+1]:=floattostr(M[i]);
-    Form1.StringGrid1.Cells[0,i+1]:=inttostr(i);
-  end;
-    Form1.StringGrid1.Cells[1,1]:=floattostr(M[0]);
-    Form1.StringGrid1.Cells[0,1]:='0';
-
-     for i:=0 to S do t:=t+M[i]; //контроль
-     Form1.Edit4.Text:=floattostr(t);
-
-     Form1.Edit6.Text:=floattostr(M[S]+M[S-1]+M[S-2]); //вероят отказа
-     Form1.Edit7.Text:=floattostr(1-M[0]); //ср число занятых каналов
-   M:=nil;
-
-end;
-
-//------------------- Многоканальная, заявки по 3, 2 и 1 -----------------------
-procedure Cicle_321n(S:Integer; a,a2,a3,b:Double);
-var
- p0,pn1,pn2,pn3,pn4,pn5,summ,t,k: double;
- i: integer;
- M:array of double;
-begin
- summ:=1;
- t:=0;
-  p0:=0;
-  pn1:= a/b+a2/b+a3/b;  //вероятность первого состояния
-  pn2:= 0;
-  pn3:= 0;
-  pn4:=0;
-  SetLength(M, S+1);
-   M[0]:=0;
-  if  S=3 then begin //если только 3 канала
-   M[1]:=pn1;
-   M[2]:=(a3/b+a2/b+(a2+a)*pn1/b)/2;
-   M[3]:=(a3/b+M[1]*a2/b+M[2]*a/b)/3;
-   M[0]:=1/(1+M[3]+M[2]+M[1]);
-  end;
-  if  S=4 then begin  //если только 4 канала
-   M[1]:=pn1;
-   M[2]:=(a3/b+a2/b+(a3+a2+a)*pn1/b)/2;
-   M[3]:=(a3/b+(a3+a2)*M[1]/b+(a2+a)*M[2]/b)/3;
-   M[4]:=(M[1]*a3/b+M[2]*a2/b+M[3]*a/b)/4;
-   M[0]:=1/(1+M[4]+M[3]+M[2]+M[1]);
-  end;
-  if S>=5 then begin  //более 5 каналов
-   M[1]:=pn1;
-   pn2:=(a3/b+a2/b+(a3+a2+a)*pn1/b)/2;
-   M[2]:= pn2;
-   pn3:= (a3/b+(a3+a2)*M[1]/b+(a3+a2+a)*M[2]/b)/3;
-   M[3]:= pn3;
-    for i := 4 to S-1 do begin
-       p0:=((pn1*a3+pn2*a3+pn2*a2+pn3*a3+pn3*a2+pn3*a)/b)/i;
-       pn4:=((pn1*a3+pn2*a3+pn2*a2+pn3*a2+pn3*a)/b)/i;
-       pn5:=((pn2*a3+pn3*a2+pn4*a)/b)/(i+1);
-       pn1:=pn2;
-       pn2:=pn3;
-       pn3:=p0;
-       M[i]:=p0;
-    end;
-   M[S-1]:=pn4;
-   M[S]:=pn5;
-  end;
-   for i := 1 to S do summ:=summ + M[i];
-   M[0]:=1/summ; //Вероятность нулевого состояния
-   //M[0]:=roundTo(1/summ,-7);
-  for i:= 1 to S do begin  //конечные вероятности
-    M[i]:=M[0]*M[i];
-    //M[i]:=roundTo(M[0]*M[i],-7);
-    Form1.StringGrid1.Cells[1,i+1]:=floattostr(M[i]);
-    Form1.StringGrid1.Cells[0,i+1]:=inttostr(i);
-  end;
-    Form1.StringGrid1.Cells[1,1]:=floattostr(M[0]);
-    Form1.StringGrid1.Cells[0,1]:='0';
-
-     for i:=0 to S do t:=t+M[i]; //контроль
-     Form1.Edit4.Text:=floattostr(t);
-
-     Form1.Edit6.Text:=floattostr(M[S]+M[S-1]+M[S-2]); //вероят отказа
-     k:=0;
-     for i:=1 to S do k:=i*M[i]+k;
-     Form1.Edit7.Text:=floattostr(k);  //ср число занятых каналов
-     Form1.Edit8.Text:=floattostr(k);  //ср ч обслуж заявок
-   M:=nil;
-
-end;
-
-//-------------------__Многоканальная с очередью, заявки по 3, 2 и 1 -----------
-procedure Cicle_321nm(S,K:Integer; a,a2,a3,b:Double);
-var
- p0,pn1,pn2,pn3,pn4,pn5,summ,t,r: double;
- i,KS: integer;
- M:array of double;
-begin
- summ:=1;
-  p0:=0;
-  pn1:= a/b+a2/b+a3/b;  //вероятность первого состояния
-  pn2:=0;
-  pn3:=0;
-  pn4:=0;
-  pn5:=0;
-   KS:=K+S;
-   SetLength(M, KS+1);
-   M[0]:=0;
-  if  (S=2) and (K=1) then begin //если только 2 канала и 1 очередь
-   M[1]:=pn1;
-   M[2]:=(a3/b+a2/b+(a2+a)*pn1/b)/2;
-   M[3]:=(a3/b+M[1]*a2/b+M[2]*a/b)/2;
-   M[0]:=1/(1+M[3]+M[2]+M[1]);
-  end;
-  if  (S=2) and (K=2) then begin  //если только 2 канала и 2 очереди
-   M[1]:=pn1;
-   M[2]:=(a3/b+a2/b+(a3+a2+a)*pn1/b)/2;
-   M[3]:=(a3/b+(a3+a2)*M[1]/b+(a2+a)*M[2]/b)/2;
-   M[4]:=(M[1]*a3/b+M[2]*a2/b+M[3]*a/b)/2;
-   M[0]:=1/(1+M[4]+M[3]+M[2]+M[1]);
-  end;
-  if  (S=3) and (K=1) then begin  //если только 2 канала и 2 очереди
-   M[1]:=pn1;
-   M[2]:=(a3/b+a2/b+(a3+a2+a)*pn1/b)/2;
-   M[3]:=(a3/b+(a3+a2)*M[1]/b+(a2+a)*M[2]/b)/3;
-   M[4]:=(M[1]*a3/b+M[2]*a2/b+M[3]*a/b)/3;
-   M[0]:=1/(1+M[4]+M[3]+M[2]+M[1]);
-  end;
-
-  if (S=2)and(K>=3) then begin  // 2 канала и любая очередь
-   M[1]:=pn1;
-   pn2:=(a3/b+a2/b+(a3+a2+a)*pn1/b)/2;
-   M[2]:= pn2;
-   pn3:= (a3/b+(a3+a2)*M[1]/b+(a3+a2+a)*M[2]/b)/2;
-   M[3]:= pn3;
-   for i := 2 to K-1 do begin // очередь
-       p0:=((pn1*a3+pn2*a3+pn2*a2+pn3*a3+pn3*a2+pn3*a)/b)/S;
-       pn4:=((pn1*a3+pn2*a3+pn2*a2+pn3*a2+pn3*a)/b)/S;
-       pn5:=((pn2*a3+pn3*a2+pn4*a)/b)/S;
-       pn1:=pn2;
-       pn2:=pn3;
-       pn3:=p0;
-       M[S+i]:=p0;
-      end;
-   M[KS-1]:=pn4;
-   M[KS]:=pn5;
-  end;
-
-  if (S>=3)and(K>=2) then begin  //более 2 каналов и очередь
-   M[1]:=pn1;
-   pn2:=(a3/b+a2/b+(a3+a2+a)*pn1/b)/2;
-   M[2]:= pn2;
-   pn3:= (a3/b+(a3+a2)*M[1]/b+(a3+a2+a)*M[2]/b)/3;
-   M[3]:= pn3;
-    if  S>=4 then begin
-     for i := 4 to S do begin
-       p0:=((pn1*a3+pn2*a3+pn2*a2+pn3*a3+pn3*a2+pn3*a)/b)/i;
-       pn1:=pn2;
-       pn2:=pn3;
-       pn3:=p0;
-       M[i]:=p0;
-     end;
-    end;
-      for i := 1 to K-1 do begin // очередь
-       p0:=((pn1*a3+pn2*a3+pn2*a2+pn3*a3+pn3*a2+pn3*a)/b)/S;
-       pn4:=((pn1*a3+pn2*a3+pn2*a2+pn3*a2+pn3*a)/b)/S;
-       pn5:=((pn2*a3+pn3*a2+pn4*a)/b)/S;
-       pn1:=pn2;
-       pn2:=pn3;
-       pn3:=p0;
-       M[S+i]:=p0;
-      end;
-   M[KS-1]:=pn4;
-   M[KS]:=pn5;
-  end;
-
-   for i := 1 to KS do summ:=summ + M[i];
-   M[0]:=1/summ; //Вероятность нулевого состояния
-   //M[0]:=roundTo(1/summ,-7);
-  for i:= 1 to KS do begin  //конечные вероятности
-    M[i]:=M[0]*M[i];
-    //M[i]:=roundTo(M[0]*M[i],-7);
-    Form1.StringGrid1.Cells[1,i+1]:=floattostr(M[i]);
-    Form1.StringGrid1.Cells[0,i+1]:=inttostr(i);
-  end;
-    Form1.StringGrid1.Cells[1,1]:=floattostr(M[0]);
-    Form1.StringGrid1.Cells[0,1]:='0';
-
-    t:=0;
-     for i:=0 to KS do begin  //контроль
-      t:=t+M[i];
-      Form1.Edit4.Text:=floattostr(t);
-     end;
-     Form1.Edit6.Text:=floattostr(M[KS]+M[KS-1]+M[KS-2]); //вероят отказа
-     //for i:=0 to 1 do k:=i*M[i]+k;
-     r:=0;
-     for i:=1 to S do r:=i*M[i]+r;
-     for i:=s+1 to K do r:=S*M[i]+r;
-     Form1.Edit7.Text:=floattostr(r);  //ср число занятых каналов
-     Form1.Edit8.Text:=floattostr(r);  //ср ч обслуж заявок
-   M:=nil;
-
-end;
-
 //------------------------------------------------------------------------------
-procedure TForm1.RadioGroup2Click(Sender: TObject);
+procedure TForm1.RadioButton5Click(Sender: TObject);
 begin
- if RadioGroup2.ItemIndex=1 then begin
-  RadioButton4.Enabled:= false;
-  RadioButton5.Enabled:= false;
-  Edit9.Enabled := false;
-  Edit10.Enabled:= false;
-  Edit1.Enabled:=  true;
- end;
- if RadioGroup2.ItemIndex=0 then begin
-  RadioButton4.Enabled:= true;
-  RadioButton5.Enabled:= true;
-  Edit9.Enabled:=  false;
-  Edit10.Enabled:=  false;
-  Edit1.Enabled:=  true;
- end;
- if RadioGroup2.ItemIndex=2 then begin
-  RadioButton4.Enabled:= false;
-  RadioButton5.Enabled:= false;
-  Edit9.Enabled:=  true;
-  Edit10.Enabled:=  false;
-  Edit1.Enabled:=  true;
- end;
- if RadioGroup2.ItemIndex=3 then begin
-  RadioButton4.Enabled:= false;
-  RadioButton5.Enabled:= false;
-  Edit9.Enabled:=  true;
-  Edit10.Enabled:=  true;
-  Edit1.Enabled:=  true;
- end;
- if RadioGroup2.ItemIndex=4 then begin
-  RadioButton4.Enabled:= false;
-  RadioButton5.Enabled:= false;
-  Edit9.Enabled:=  true;
-  Edit10.Enabled:=  true;
-  Edit1.Enabled:=  false;
- end;
- if RadioGroup2.ItemIndex=5 then begin
-  RadioButton4.Enabled:= false;
-  RadioButton5.Enabled:= false;
-  Edit9.Enabled:=  false;
-  Edit10.Enabled:=  true;
-  Edit1.Enabled:=  true;
- end;
+ Label5.Visible:= false;
+ Edit5.Visible:= false;
+ Form1.Button1.Caption:='Заполнение'
 end;
 
-//------------------------------------------------------------------------------
 end.
 
 
